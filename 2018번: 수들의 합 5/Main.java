@@ -14,6 +14,7 @@ import java.util.*;
 
 public class Main{
   public static void main(String[] args) {
+    
     // 투 포인터 사용
     Scanner sc = new Scanner(System.in);
     int N = sc.nextInt();
