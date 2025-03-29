@@ -15,7 +15,6 @@
 // start_idx, end_idx
 
 import java.util.*;
-import java.io.*;
 
 public class Main{
   public static void main(String[] args) {
