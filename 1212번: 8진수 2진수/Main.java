@@ -17,9 +17,22 @@ public class Main{
     Scanner sc = new Scanner(System.in);
     String octal = sc.next();
 
-    int decimal = Integer.parseInt(octal, 8);
-    String binary = Integer.toBinaryString(decimal);
+    StringBuilder sb = new StringBuilder();
 
-    System.out.println(binary);
+    for(int i = 0; i < octal.length(); i++){
+      int num = octal.charAt(i) - '0';
+      String binary = Integer.toBinaryString(num);
+
+      if(i == 0) {
+        sb.append(binary);
+      } else {
+        while(binary.length() < 3){
+          binary = "0" + binary;
+        }
+        sb.append(binary);
+      }
+    }
+
+    System.out.println(sb.toString());
   }
 }
