@@ -10,14 +10,11 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-
-// 투 포인터 사용
-// start_idx, end_idx
-
 import java.util.*;
 
 public class Main{
   public static void main(String[] args) {
+    // 투 포인터 사용
     Scanner sc = new Scanner(System.in);
     int N = sc.nextInt();
     int start_idx = 1, end_idx = 1, cnt = 1, sum = 1;
