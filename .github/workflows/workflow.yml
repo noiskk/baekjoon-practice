@@ -16,11 +16,11 @@ jobs:
         id: getfile
         run: |-
           echo "" > not_filled_files.txt
-          while IFS= read -r -d $'\0' file; do
-          	if ! grep -q "### 성능 요약" "$file"; then
+          find . -type f -name "*.md" -print0 | while IFS= read -r -d '' file; do
+            if ! grep -q "### 성능 요약" "$file"; then
           		echo "$file" >> not_filled_files.txt
           	fi
-          done < <(find . -name "*.md" -print0)
+          done
       - name: Update Performance in Markdown
         uses: dltkdgns00/BOJ-action@main
         with:
