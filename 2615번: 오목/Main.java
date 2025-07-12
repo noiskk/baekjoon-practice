@@ -1,94 +1,73 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                      :::    :::    :::     */
-/*   Problem Number: 2615                              :+:    :+:      :+:    */
-/*                                                    +:+    +:+        +:+   */
-/*   By: zionzion00 <boj.kr/u/zionzion00>            +#+    +#+          +#+  */
-/*                                                  +#+      +#+        +#+   */
-/*   https://boj.kr/2615                           #+#        #+#      #+#    */
-/*   Solved: 2025/07/22 14:11:26 by zionzion00    ###          ###   ##.kr    */
-/*                                                                            */
-/* ************************************************************************** */
-
-
-/*
- * 배열로 구현..?
- * 일단 배열에 저장하고
- * 검은색 -> 흰색 순서로 판별
- * 판을 다 검증하면서 검은색 돌이 있으면 오른쪽, 아래쪽을 봄 (총 4군데, 근데 있으면 그 기울기로 쭉 확인해야 됨)
- * 
- */
-
-
 import java.io.*;
 import java.util.*;
 
 public class Main{
-  static int[][] stage;
-  static int[] dr; // 3시, 4시, 6시, 7시 방향
-  static int[] dc;
+  
+  static int[][] board;
+  // 우, 하, 우-하, 우-상 대각선
+  static int[] dx = {0, 1, 1, -1};
+  static int[] dy = {1, 0, 1, 1};
 
   public static void main(String[] args) throws IOException{
+
+    board = new int[19][19];
     BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-
-    stage = new int[19][19];
-    dr = new int[]{0, 1, 1, -1}; // 3시, 4시, 6시, 7시 방향
-    dc = new int[]{1, 1, 0, 1};
-
-    StringTokenizer st;
-
+    
     for (int i = 0; i < 19; i++) {
-      st = new StringTokenizer(br.readLine());
-
+      StringTokenizer st = new StringTokenizer(br.readLine());
       for (int j = 0; j < 19; j++) {
-        stage[i][j] = Integer.parseInt(st.nextToken());
-      } 
-    }
-
-    for (int i = 0; i < 19; i++) {
-      for (int j = 0; j < 19; j++) {
-        if(stage[i][j] != 0){
-          for (int d = 0; d < 4; d++) {
-            if(isWin(i, j, d)){
-              System.out.println(stage[i][j]);
-              System.out.println((i + 1) + " " + (j + 1));
-              return;
-            }
-          }
-          
-        }     
+        board[i][j] = Integer.parseInt(st.nextToken());
       }
     }
 
+    // 가장 왼쪽에 있는 바둑알을 출력해야 하기 때문에 가로 방향 말고 세로 방향으로 탐색
+    for (int j = 0; j < 19; j++) {
+      for (int i = 0; i < 19; i++) {
+        if(board[i][j] != 0){
+          if(checkWin(i, j)){
+            System.out.println(board[i][j]);
+            System.out.println((i + 1) + " " + (j + 1));
+            return;
+          }
+        }
+      }
+    }
+
+    // 무승부
     System.out.println(0);
-
   }
 
-  public static boolean isWin(int i, int j, int dir){
-    int stoneColor = stage[i][j];
+  private static boolean checkWin(int x, int y){
+    int stoneColor = board[x][y];
 
-    int prevR = i - dr[dir];
-    int prevC = j - dc[dir];
-    if (isInBounds(prevR, prevC) && stage[prevR][prevC] == stoneColor) {
-        return false;
+    for (int i = 0; i < 4; i++) {
+      int count = 1;
+      int nx = x + dx[i];
+      int ny = y + dy[i];
+
+      // 연속된 돌 확인
+      while(isValid(nx, ny) && board[nx][ny] == stoneColor){
+        count++;
+        nx += dx[i];
+        ny += dy[i];
+      }
+
+      // 육목 확인
+      if(count == 5){
+        int prevX = x - dx[i];
+        int prevY = y - dy[i];
+
+        if(!isValid(prevX, prevY) || board[prevX][prevY] != stoneColor){
+          return true;
+        }
+      }
     }
 
-    int count = 1;
-
-    int r = i + dr[dir]; // 새로 확인할 돌 위치
-    int c = j + dc[dir];
-
-    while(isInBounds(r, c) && stage[r][c] == stoneColor){
-      count++;
-      r += dr[dir];
-      c += dc[dir];
-    }
-    
-    return count == 5;
+    return false;
   }
 
-  public static boolean isInBounds(int r, int c){
-    return r >= 0 && c >= 0 && r < 19 && c < 19;
+  private static boolean isValid(int x, int y){
+    return x >= 0 && x < 19 && y >= 0 && y < 19;
   }
-  
+
 }
