@@ -1,6 +1,3 @@
-
-import java.util.Scanner;
-
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                      :::    :::    :::     */
@@ -13,47 +10,42 @@ import java.util.Scanner;
 /*                                                                            */
 /* ************************************************************************** */
 
+import java.io.*;
+import java.util.*;
+
 public class Main{
+  public static void main(String[] args) throws IOException{
+    BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+    StringTokenizer st = new StringTokenizer(br.readLine());
 
-  static int N;
-  static int K;
+    int N = Integer.parseInt(st.nextToken()); // 카드 개수
+    int K = Integer.parseInt(st.nextToken()); // 카드를 섞은 횟수
 
-  static int[] S;
-  static int[] D;
+    int[] S = new int[N]; // 카드 섞은 후 배치
+    int[] D = new int[N]; // 셔플 정보
+    int[] P = new int[N]; // 초기 배치
 
-  public static void main(String[] args) {
-    Scanner sc = new Scanner(System.in);
-
-    N = sc.nextInt();
-    K = sc.nextInt();
-
-    S = new int[N];
-    D = new int[N];
-
+    st = new StringTokenizer(br.readLine());
     for (int i = 0; i < N; i++) {
-      S[i] = sc.nextInt();
+      S[i] = Integer.parseInt(st.nextToken());
     }
 
+    st = new StringTokenizer(br.readLine());
     for (int i = 0; i < N; i++) {
-      D[i] = sc.nextInt();
+      D[i] = Integer.parseInt(st.nextToken());
     }
 
     for (int i = 0; i < K; i++) {
-      unshuffle();   
+      for (int j = 0; j < N; j++) {
+        P[D[j] - 1] = S[j];    
+      }
+
+      S = Arrays.copyOf(P, N);
     }
 
     for (int i = 0; i < N; i++) {
-      System.out.print(S[i] + " ");   
+      System.out.print(P[i] + " ");
     }
 
-  }
-
-  public static void unshuffle(){
-    int[] temp = new int[N];
-    for (int i = 0; i < N; i++) {
-      temp[D[i] - 1] = S[i];
-    }
-
-    S = temp;
   }
 }
