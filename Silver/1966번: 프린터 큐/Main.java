@@ -10,52 +10,70 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+import java.io.*;
 import java.util.*;
 
 public class Main{
-  public static void main(String[] args) {
-    Scanner sc = new Scanner(System.in);
-    int test = sc.nextInt();
 
-    for (int i = 0; i < test; i++) {
+  static class Document{
+    int index;
+    int priority;
 
-      // 입력 받기
-      int N = sc.nextInt();
-      int M = sc.nextInt();
+    public Document(int index, int priority) {
+      this.index = index;
+      this.priority = priority;
+    }
+    
+  }
 
-      Queue<int[]> queue = new LinkedList<>();
-      for(int j = 0; j < N; j++){
-        int priority = sc.nextInt();
-        queue.offer(new int[]{j, priority});
+  public static void main(String[] args) throws IOException{
+    BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+    StringTokenizer st;
+    StringBuilder sb = new StringBuilder();
+
+    int T = Integer.parseInt(br.readLine());
+
+    for (int i = 0; i < T; i++) {
+      st = new StringTokenizer(br.readLine());
+      int N = Integer.parseInt(st.nextToken());
+      int M = Integer.parseInt(st.nextToken());
+
+      Queue<Document> queue = new LinkedList<>();
+
+      st = new StringTokenizer(br.readLine());
+      for (int j = 0; j < N; j++) {
+        int priority = Integer.parseInt(st.nextToken());
+        queue.add(new Document(j, priority));
       }
-
-      int count = 0;
+      
+      int printCount = 0;
 
       while(!queue.isEmpty()){
-        // 제일 앞에 있는 문서의 중요도 확인
-        // 중요도 가장 높으면 출력, 아니면 맨 뒤로 다시 넣음. 
-        
-        // 중요도 최댓값 계산
-        int max_priority = 0;
-        for(int[] a : queue){
-          if(a[1] > max_priority){
-            max_priority = a[1];
-          }
-        }
-        
-        // 제일 앞에 있는 문서의 중요도 확인
-        int[] current = queue.poll();
-        if(current[1] != max_priority){
-          queue.offer(current);
-        } else {
-          count++;
-          if(current[0] == M){
-            System.out.println(count);
+
+        Document current = queue.poll();
+        boolean isPrintable = true;
+
+        for(Document doc : queue){
+          if(current.priority < doc.priority){
+            isPrintable = false;
             break;
           }
         }
+
+        if(isPrintable){
+          printCount++;
+          if(current.index == M){
+            sb.append(printCount).append("\n");
+            break; // while 문 break
+          }
+        } else {
+          queue.offer(current);
+        }
+
       }
 
     }
+    
+    System.out.println(sb.toString());
   }
 }

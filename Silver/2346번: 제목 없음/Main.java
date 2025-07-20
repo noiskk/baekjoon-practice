@@ -10,51 +10,57 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+import java.io.*;
 import java.util.*;
 
 public class Main{
-  public static void main(String[] args) {
-    Scanner sc = new Scanner(System.in);
-    int N = sc.nextInt();
 
-    Deque<int[]> deque = new ArrayDeque<>();
+  static class Balloon {
+    int index;
+    int move;
 
-    for(int i = 1; i <= N; i++){
-      int card = sc.nextInt();
-      deque.offer(new int[]{i, card});
+    Balloon(int index, int move) {
+      this.index = index;
+      this.move = move;
+    }
+  }
+
+  public static void main(String[] args) throws IOException{
+    BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+    int N = Integer.parseInt(br.readLine());
+
+    Deque<Balloon> deque = new ArrayDeque<>();
+    StringTokenizer st = new StringTokenizer(br.readLine());
+
+    for (int i = 1; i <= N; i++) {
+      int move = Integer.parseInt(st.nextToken());
+      deque.offer(new Balloon(i, move));
     }
 
-    // first     last
-    // 1  2  3  4  5 
-    // 3  2  1 -3 -1
-
     StringBuilder sb = new StringBuilder();
+
     while(!deque.isEmpty()){
-      int[] cur = deque.pollFirst();
-      sb.append(cur[0]).append(" ");
+      Balloon current = deque.pollFirst();
+      sb.append(current.index).append(" ");
 
       if(deque.isEmpty()) break;
 
-      int cnt = cur[1];
-      int size = deque.size();
-
-      if(cnt > 0){
-        cnt %= size;
-        if(cnt == 0) cnt = size;
-        for (int i = 0; i < cnt - 1; i++) {
-          deque.offerLast(deque.pollFirst());    
+      if(current.move > 0){
+        int moves = current.move - 1;
+        for (int i = 0; i < moves; i++) {
+          deque.offerLast(deque.pollFirst());
         }
+
       } else {
-        cnt = (-cnt) % size;
-        if(cnt == 0) cnt = size;
-        for (int i = 0; i < cnt; i++) {
-          deque.offerFirst(deque.pollLast());    
+        int moves = -current.move;
+        for (int i = 0; i < moves; i++) {
+          deque.offerFirst(deque.pollLast());
         }
 
       }
     }
 
-    System.out.println(sb);
+    System.out.println(sb.toString().trim());
 
   }
 }
