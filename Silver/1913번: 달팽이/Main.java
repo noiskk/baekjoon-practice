@@ -10,68 +10,59 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-
-import java.util.*;
+import java.io.*;
 
 public class Main{
+  public static void main(String[] args) throws IOException{
+    BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+    int N = Integer.parseInt(br.readLine()); // 홀수인 자연수
+    int target = Integer.parseInt(br.readLine()); // 위치를 찾고자 하는 자연수
 
-  public static void main(String[] args) {
-    Scanner sc = new Scanner(System.in);
-    StringBuilder sb = new StringBuilder();
+    int[][] snail = new int[N][N];
 
-    int N = sc.nextInt();
-    int M = sc.nextInt();
-
-    int[][] map = new int[N][N];
-
-    int[] dx = {-1, 0, 1, 0};
+    // 방향 배열: 하, 우, 상, 좌
+    int[] dx = {1, 0, -1, 0};
     int[] dy = {0, 1, 0, -1};
 
-    int x = N / 2, y = N / 2;
+    int x = 0, y = 0; // 시작 위치
+    int targetX = 0, targetY = 0; // 찾는 숫자 좌표
+    int num = N * N;
+    int direction = 0; // 아래쪽 방향부터 시작
 
-    int num = 1;
-    int len = 1;
-    int dir = 0;
-    int targetX = 0, targetY = 0;
-    
-    OUTER:
-    while(true){
-      for (int i = 0; i < 2; i++) {
-        for (int j = 0; j < len; j++) {
-          map[x][y] = num;
+    for (int i = 0; i < N * N; i++) {
+      snail[x][y] = num;   
 
-          if(num == M) {
-            targetX = x + 1;
-            targetY = y + 1;
-          }
-
-          if(num == N * N) break OUTER;
-
-          num++;
-          x += dx[dir];
-          y += dy[dir];
-        }
-
-        dir = (dir + 1) % 4;
-          
+      if(num == target){
+        targetX = x + 1;
+        targetY = y + 1;
       }
 
-      len++;
+      num--;
+
+      int nx = x + dx[direction];
+      int ny = y + dy[direction];
+
+      if(nx >= N || nx < 0 || ny >= N || ny < 0 || snail[nx][ny] != 0){
+        direction = (direction + 1) % 4;
+        nx = x + dx[direction];
+        ny = y + dy[direction];
+      }
+
+      x = nx;
+      y = ny;
     }
+
+    StringBuilder sb = new StringBuilder();
 
     for (int i = 0; i < N; i++) {
       for (int j = 0; j < N; j++) {
-        sb.append(map[i][j]);
-        
-        if (j < N - 1) {
-          sb.append(" ");
-        }
+        sb.append(snail[i][j]).append(" ");
+
       }
       sb.append("\n");
     }
 
-    sb.append(targetX).append(" ").append(targetY);
-
-    System.out.print(sb);
+    System.out.print(sb.toString());
+    System.out.print(targetX + " " + targetY);
   }
 }
